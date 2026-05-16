@@ -24,14 +24,20 @@ public class ControladorJugador implements Controlador {
         if (teclasActivas.contains("UP") || teclasActivas.contains("W")) {
             vehiculo.acelerar();
         }
-        if (teclasActivas.contains("DOWN") || teclasActivas.contains("S")) {
+        if (!teclasActivas.contains("DOWN") & !teclasActivas.contains("S") & !teclasActivas.contains("UP") & !teclasActivas.contains("W")){
             vehiculo.frenar();
+        }
+
+        if (teclasActivas.contains("DOWN") || teclasActivas.contains("S")) {
+            vehiculo.reversa();
         }
         if (teclasActivas.contains("LEFT") || teclasActivas.contains("A")) {
             vehiculo.girar(-3.0); // Gira a la izquierda
+
         }
         if (teclasActivas.contains("RIGHT") || teclasActivas.contains("D")) {
             vehiculo.girar(3.0);  // Gira a la derecha
+
         }
     }
 }
