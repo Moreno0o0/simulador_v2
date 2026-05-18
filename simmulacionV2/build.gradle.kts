@@ -1,7 +1,7 @@
 plugins {
     java
     application
-    id("org.javamodularity.moduleplugin") version "1.8.15"
+    //id("org.javamodularity.moduleplugin") version "1.8.15"
     id("org.openjfx.javafxplugin") version "0.0.13"
     id("org.beryx.jlink") version "2.25.0"
 }
@@ -11,6 +11,9 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+    maven {
+        url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
+    }
 }
 
 val junitVersion = "5.12.1"
@@ -40,8 +43,15 @@ dependencies {
         exclude(group = "org.openjfx")
         exclude(group = "org.jetbrains.kotlin")
     }
-    testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+
+    // --- CEREBRO BIÓNICO (DL4J M1.1) ---
+    val dl4jVersion = "1.0.0-M1.1"
+    implementation("org.deeplearning4j:deeplearning4j-core:$dl4jVersion")
+    implementation("org.deeplearning4j:rl4j-core:$dl4jVersion")
+    implementation("org.nd4j:nd4j-native-platform:$dl4jVersion")
+
+    // Necesario para ver el progreso en consola
+    implementation("org.slf4j:slf4j-simple:1.7.36")
 }
 
 tasks.withType<Test> {
@@ -54,4 +64,19 @@ jlink {
     launcher {
         name = "app"
     }
+}
+tasks.withType<JavaExec> {
+    jvmArgs(
+        // 1. Memoria Heap (Java)
+        "-Xms8G",           // Arranca pidiendo 8GB de golpe
+        "-Xmx16G",          // Límite para objetos Java: 16GB
+
+        // 2. Memoria Off-Heap (ND4J - C++ Matemático)
+        // ¡Aquí es donde ocurre la magia de las redes neuronales!
+        "-Dorg.bytedeco.javacpp.maxbytes=24G",
+        "-Dorg.bytedeco.javacpp.maxphysicalbytes=40G",
+
+        // 3. Optimizador de recolección de basura para que no haya tirones
+        "-XX:+UseG1GC"
+    )
 }

@@ -7,9 +7,19 @@ public class Vehiculo extends Entidad {
     private double aceleracion ;
     private Sensores sensores;
 
+    //atributos para el tiempo y recompensa de la IA
+    private long tiempoInicioEpisodio;
+    private double tiempoVivoActual; // En segundos
+    private double tiempoVictoria;    // Guardará el tiempo final al ganar
+    private boolean haTerminado;
+
+    private double startX;
+    private double startY;
+    private double startAngulo;
+
     private String estado; // "En movimiento", "Chocado", "Meta"
 
-    private final double VEL_MAX = 0.1;
+    private final double VEL_MAX = 0.2;// 0.1;
     private static final int ANCHO_CARRO = 60;
     private static final int ALTO_CARRO = 30;
 
@@ -17,9 +27,13 @@ public class Vehiculo extends Entidad {
         super(x, y, ancho, alto);
         this.velocidad = 0;
         this.angulo = 180; // Mirando hacia la izquierda inicialmente
-        this.aceleracion = 0.001;
+        this.aceleracion = 0.002;//0.001;
         this.estado = "Detenido";
         this.sensores = new IA.Sensores();
+        this.startX = x;
+        this.startY = y;
+        this.startAngulo = 180; // Guardamos tu ángulo base
+        this.angulo = 180;
     }
     public Vehiculo() {
         this(1000,690,ANCHO_CARRO,ALTO_CARRO);
@@ -31,11 +45,12 @@ public class Vehiculo extends Entidad {
     }
     // Agrégalo en tu clase Vehiculo, junto a tus otros métodos
     public void reiniciarPosicion() {
-        this.setX(1000);       // Tu posición inicial en X
-        this.setY(690);        // Tu posición inicial en Y
-        this.angulo = 180;     // Mirando hacia la izquierda
+        this.setX(this.startX);       // Tu posición inicial en X
+        this.setY(this.startY);        // Tu posición inicial en Y
+        this.angulo = this.startAngulo;     // Mirando hacia la izquierda
         this.velocidad = 0;    // Lo detenemos por completo
-        this.estado = "Detenido";
+        this.estado = "En movimiento";
+        this.iniciarCronometro();
     }
 
     @Override
@@ -54,6 +69,8 @@ public class Vehiculo extends Entidad {
         } else {
             estado = "Detenido";
         }
+
+
 
     }
 
@@ -76,12 +93,30 @@ public class Vehiculo extends Entidad {
 
     public void girar(double deltaAngulo) {
         // solo se mmueve si esta avanzando el carro
-        if (velocidad > 0.01) {
-            this.angulo += deltaAngulo/20;
+        if (velocidad > 0) {
+            this.angulo += deltaAngulo/20.0;
         }
     }
     public Sensores getSensores() {
         return sensores;
+    }
+
+    public void iniciarCronometro() {
+        this.tiempoInicioEpisodio = System.currentTimeMillis();
+        this.tiempoVivoActual = 0.0;
+        this.tiempoVictoria = 0.0;
+        this.haTerminado = false;
+    }
+    public void actualizarCronometro() {
+        if (!haTerminado && "En movimiento".equals(this.getEstado())) {
+            long tiempoActual = System.currentTimeMillis();
+            // Convertimos la diferencia de milisegundos a segundos con decimales
+            this.tiempoVivoActual = (tiempoActual - this.tiempoInicioEpisodio) / 1000.0;
+        }
+    }
+    public void detenerCronometroEnMeta() {
+        this.haTerminado = true;
+        this.tiempoVictoria = this.tiempoVivoActual;
     }
 
     // Getters y Setters
@@ -94,4 +129,10 @@ public class Vehiculo extends Entidad {
     public void setEstado(String estado) { this.estado = estado; }
     public int getAlto_carro() { return ALTO_CARRO; }
     public int getAncho_carro() { return ANCHO_CARRO; }
+    public double getTiempoVivoActual() { return tiempoVivoActual; }
+    public double getTiempoVictoria() { return tiempoVictoria; }
+    public boolean isHaTerminado() { return haTerminado; }
+
+    public void setAngulo(double v) {this.angulo = v;}
+
 }

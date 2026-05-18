@@ -7,8 +7,8 @@ public class Sensores {
 
     // Configuración de nuestro "LIDAR"
     private int numRayos = 5; // Lanzaremos 5 rayos (ej. Izquierda, diag-izq, frente, diag-der, derecha)
-    private double rangoMaximo = 200.0; // Hasta cuántos píxeles puede "ver" a lo lejos
-    private double anguloApertura = 90.0; // El cono de visión total (45° a la izq y 45° a la der)
+    private double rangoMaximo = 500.0; // Hasta cuántos píxeles puede "ver" a lo lejos
+    private double anguloApertura = 130.0; // El cono de visión total (45° a la izq y 45° a la der)
 
     /**
      * Este método devuelve un arreglo de distancias NORMALIZADAS (de 0.0 a 1.0).

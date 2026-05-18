@@ -74,12 +74,7 @@ public class VistaJuego extends StackPane implements Render {
             gc.fillText("Felicidades por terminar la carrera", 510, 560);
         }
 
-
-
-
         Sensores sens = agenteIA.getSensores();
-
-
 
         if (sens != null) {
             double[] distanciasActuales = sens.obtenerDistancias(agenteIA, gestorColisiones);
