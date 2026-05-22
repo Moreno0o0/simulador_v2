@@ -24,7 +24,7 @@ public class Motor {
     private final double TICK_RATE = 1_000_000_000.0 / 60.0;
     private boolean esModoEntrenamiento;
 
-    // SOLUCIÓN PUNTO 1: El motor recibe los dos controladores ya creados
+    //
     public Motor(Vehiculo jugador, Vehiculo ia, Controlador cJugador, AgenteIA cIA, Render vista, GestorColisiones gestor, boolean modoEntrenamiento) {
         this.vehiculoJugador = jugador;
         this.vehiculo_IA = ia;
@@ -41,7 +41,7 @@ public class Motor {
             System.out.println(">>> [MODO ENTRENAMIENTO ACTIVADO] Iniciando simulación...");
             EntornoPista entorno = new EntornoPista(this.vehiculo_IA, this.gestorFisicas);
             Thread hiloEntrenamiento = new Thread(() -> {
-                EntrenadorIA.entrenar(entorno, "_V1");
+                EntrenadorIA.entrenar(entorno, "_V1");//misma ruta que en main
             });
             hiloEntrenamiento.setDaemon(true);
             hiloEntrenamiento.start();
@@ -56,11 +56,12 @@ public class Motor {
             @Override
             public void handle(long tiempoActual) {
                 // Inicializamos el reloj en el primer fotograma
+
                 if (tiempoAnterior == 0) {
                     tiempoAnterior = tiempoActual;
                     return;
                 }
-                double dtSegundos = (tiempoActual - tiempoAnterior) / 1_000_000_000.0;
+                double dtSegundos = (tiempoActual - tiempoAnterior) / 1_000_000_000.0;//calcula el tiempo para el semaforo de cuanta regresiva
 
                 if (!esModoEntrenamiento && cuentaRegresiva > -1.0) {
                     cuentaRegresiva -= dtSegundos;

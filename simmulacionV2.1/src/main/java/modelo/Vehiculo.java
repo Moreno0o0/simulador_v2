@@ -131,10 +131,6 @@ public class Vehiculo extends Entidad {
     public double getAngulo() { return angulo; }
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
-    public double getTiempoVivoActual() { return tiempoVivoActual; }
-    public double getTiempoVictoria() { return tiempoVictoria; }
-    public boolean isHaTerminado() { return haTerminado; }
 
-    public void setAngulo(double v) {this.angulo = v;}
 
 }

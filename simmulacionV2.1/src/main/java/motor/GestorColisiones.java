@@ -12,13 +12,8 @@ public class GestorColisiones {
 
     private BufferedImage mascara_img;
 
-    private static final double META_X = 1050;
-    private static final double META_Y = 640;
-    private static final double META_ANCHO = 50;
-    private static final double META_ALTO = 90;
-
     public GestorColisiones() {
-        // Usamos ImageIO nativo de Java, independiente de JavaFX
+        //Cargamos la pista B&W para calcular colisiones
         try {
             InputStream is = getClass().getResourceAsStream("/assets/track_B&W.png");
             if (is != null) {
@@ -30,11 +25,9 @@ public class GestorColisiones {
             System.out.println("Error al cargar la máscara de físicas: " + e.getMessage());
         }
     }
-
+    //Calculamos la hitbox
     public boolean chocaConBorde(Vehiculo vehiculo) {
         if (mascara_img == null) return false;
-
-        // Calculamos la trompa del carro usando las medidas reales
         double anguloRadianes = Math.toRadians(vehiculo.getAngulo());
         double trompaX = vehiculo.getX() + Math.cos(anguloRadianes) * (Constantes.ANCHO_CARRO / 4.0);
         double trompaY = vehiculo.getY() + Math.sin(anguloRadianes) * (Constantes.ANCHO_CARRO / 4.0);
@@ -46,8 +39,8 @@ public class GestorColisiones {
         double carroX = vehiculo.getX();
         double carroY = vehiculo.getY();
 
-        return carroX >= META_X && carroX <= (META_X + META_ANCHO) &&
-                carroY >= META_Y && carroY <= (META_Y + META_ALTO);
+        return carroX >= Constantes.META_X && carroX <= (Constantes.META_X + Constantes.META_ANCHO) &&
+                carroY >= Constantes.META_Y && carroY <= (Constantes.META_Y + Constantes.META_ALTO);
     }
 
     public boolean esBorde(double x, double y) {
@@ -68,8 +61,5 @@ public class GestorColisiones {
         return brillo < 0.5; // Si el pixel es negro/oscuro, hay colisión
     }
 
-    public double getMetaX() { return META_X; }
-    public double getMetaY() { return META_Y; }
-    public double getMetaAncho() { return META_ANCHO; }
-    public double getMetaAlto() { return META_ALTO; }
+
 }

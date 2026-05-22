@@ -14,17 +14,17 @@ public class EntrenadorIA {
 
         QLearningConfiguration configQL = QLearningConfiguration.builder()
                 .seed(123L)
-                .maxEpochStep(7000)        // Si da 2000 pasos sin meta/choque, reiniciamos (evita bucles infinitos)
-                .maxStep(400000)           // ¡MEDIO MILLÓN de pasos de entrenamiento total!
-                .expRepMaxSize(60000)      // Memoria de elefante: recuerda sus últimos 50,000 pasos
+                .maxEpochStep(7000)        // Si da pasos sin meta/choque, reiniciamos (evita bucles)
+                .maxStep(400000)           // Pasos totales de entrenamiento
+                .expRepMaxSize(60000)      // Memoria de sus últimos pasos
                 .batchSize(64)             // Lotes más pequeños para redes pequeñas (aprende más rápido)
                 .targetDqnUpdateFreq(1500)  // Frecuencia de actualización de la red objetivo
-                .updateStart(5000)         // Espera a tener 1000 recuerdos antes de empezar a estudiar
-                .rewardFactor(1.0)         // ¡Dejamos los puntos tal cual se los mandas desde EntornoPista!
+                .updateStart(5000)         // Espera a tener recuerdos antes de empezar a estudiar
+                .rewardFactor(1.0)         // Multiplicador de puntos
                 .gamma(0.99)               // Visión a largo plazo intacta
                 .errorClamp(1.0)
                 .minEpsilon(0.05f)         // Al final de su vida, usará su cerebro el 95% del tiempo
-                .epsilonNbStep(100000)     // Explora (hace locuras) durante los primeros 100k pasos
+                .epsilonNbStep(100000)     // Explora durante los primeros pasos
                 .doubleDQN(true)
                 .build();
 
@@ -32,8 +32,8 @@ public class EntrenadorIA {
         DQNDenseNetworkConfiguration configRed = DQNDenseNetworkConfiguration.builder()
                 .l2(0.0001)
                 .updater(new Adam(0.00025))
-                .numHiddenNodes(128)       // Reducido de 512 a 128 (Tu procesador te lo agradecerá)
-                .numLayers(4)              // Reducido de 6 a 3 capas (Perfecto para 5 sensores)
+                .numHiddenNodes(128)       // Número de neuronas
+                .numLayers(4)              // Numero de capas
                 .build();
 
         try {

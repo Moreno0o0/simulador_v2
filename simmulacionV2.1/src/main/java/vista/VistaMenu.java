@@ -23,7 +23,7 @@ public class VistaMenu extends StackPane { // Heredamos de StackPane para apilar
 
     public VistaMenu(Runnable accionJugar) {
 
-        // 1. Imagen de fondo (La pista)
+        // Imagen de fondo (La pista)
         Image imgFondo = new Image(getClass().getResourceAsStream("/assets/track.png"));
         ImageView vistaFondo = new ImageView(imgFondo);
         vistaFondo.setFitWidth(modelo.Constantes.ANCHO_VENTANA);
@@ -32,11 +32,11 @@ public class VistaMenu extends StackPane { // Heredamos de StackPane para apilar
 
         this.setStyle("-fx-background-color: #1a1a1a;"); // Fondo negro base
 
-        // 2. Contenedor central
+        //Contenedor central
         VBox cajaCentral = new VBox(50);
         cajaCentral.setAlignment(Pos.CENTER);
 
-        // 3. Título del Juego (Sombra roja neón)
+        //Título del Juego (Sombra roja neón)
         Label titulo = new Label("CARRERA NEURONAL");
         titulo.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
         titulo.setFont(new Font("Impact", 80));
@@ -46,7 +46,7 @@ public class VistaMenu extends StackPane { // Heredamos de StackPane para apilar
         sombraTexto.setRadius(15);
         titulo.setEffect(sombraTexto);
 
-        // 4. Botón Moderno con gradiente
+        //Botón iniciar
         Button btnJugar = new Button("INICIAR COMPETENCIA");
         btnJugar.setFont(new Font("Arial Rounded MT Bold", 26));
 

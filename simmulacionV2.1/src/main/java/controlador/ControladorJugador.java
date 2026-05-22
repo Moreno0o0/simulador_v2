@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ControladorJugador implements Controlador {
-    // Aquí guardaremos las teclas que el jugador está presionando actualmente
+    // Aquí se guardan laas teclas que usa el usuario
     private Set<String> teclasActivas = new HashSet<>();
 
     // Método para que la vista (JavaFX) nos avise qué tecla se presionó

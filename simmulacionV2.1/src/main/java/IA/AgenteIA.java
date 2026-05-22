@@ -23,9 +23,9 @@ public class AgenteIA implements Controlador {
             File archivo = new File(rutaModelo);
             if (archivo.exists()) {
                 cerebroIA = MultiLayerNetwork.load(archivo, false);
-                System.out.println(">>> [ÉXITO] El piloto de la IA está listo para correr.");
+                System.out.println(">>> Piloto IA está listo para correr.");
             } else {
-                System.out.println(">>> [SISTEMA] No hay modelo entrenado disponible en: " + rutaModelo);
+                System.out.println(">>> [SISTEMA] No se encontro modelo entrenado en: " + rutaModelo);
             }
         } catch (Exception e) {
             e.printStackTrace();

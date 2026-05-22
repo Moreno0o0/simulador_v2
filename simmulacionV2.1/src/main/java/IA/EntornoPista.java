@@ -42,17 +42,17 @@ public class EntornoPista implements MDP<EstadoVehiculo, Integer, DiscreteSpace>
 
     @Override
     public EstadoVehiculo reset() {
-        // 1. Limpieza total y posicionamiento inicial
+        //Posicionamiento inicial
         vehiculo.reiniciarPosicion();
         vehiculo.setEstado("En movimiento");
         vehiculo.actualizar();
 
-        // 2. Reiniciamos el GPS con las coordenadas frescas (CRÍTICO)
+        //Coordenadas para la ubicación GPS
         this.ultimoX = vehiculo.getX();
         this.ultimoY = vehiculo.getY();
         this.pasosSobrevividos = 0;
 
-        // 3. Lectura inicial de sensores (Instanciamos un arreglo NUEVO)
+        //Lectura de sensores
         double[] distancias = vehiculo.getSensores().obtenerDistancias(vehiculo, gestor);
         double[] normalizados = new double[5];
         for(int i = 0; i < 5; i++) {
@@ -68,7 +68,7 @@ public class EntornoPista implements MDP<EstadoVehiculo, Integer, DiscreteSpace>
         int frameSkip = 5;
         boolean chocoEnElCamino = false;
 
-        // 1. FÍSICAS Y CINEMÁTICA
+        // FÍSICAS Y CINEMÁTICA
         for (int i = 0; i < frameSkip; i++) {
             vehiculo.ejecutarAccionIA(action);
             vehiculo.actualizar();
@@ -79,24 +79,24 @@ public class EntornoPista implements MDP<EstadoVehiculo, Integer, DiscreteSpace>
             }
         }
 
-        // 2. LECTURA DE SENSORES
+        //Lectura de sensores
         double[] distancias = vehiculo.getSensores().obtenerDistancias(vehiculo, gestor);
         double[] normalizados = new double[5];
         for (int i = 0; i < 5; i++) {
             normalizados[i] = distancias[i] / 200.0;
         }
 
-        // 3. ABORTO INMEDIATO POR COLISIÓN
+        //Penalización por collision
         if (chocoEnElCamino) {
             vehiculo.setEstado("Chocado");
             if (this.pasosSobrevividos % 100000 == 0) {
                 org.nd4j.linalg.factory.Nd4j.getMemoryManager().invokeGc();
             }
-            // CASTIGO BRUTAL: Queremos que evite los muros a toda costa
+            // Castigo para que evite los muros a toda costa
             return new StepReply<>(new EstadoVehiculo(normalizados), -5000.0, true, null);
         }
 
-        // 4. NUEVO SISTEMA DE RECOMPENSAS
+        // SISTEMA DE RECOMPENSAS
         this.pasosSobrevividos++;
 
         // Castigo constante por tiempo (obliga al agente a querer terminar rápido)
@@ -110,22 +110,22 @@ public class EntornoPista implements MDP<EstadoVehiculo, Integer, DiscreteSpace>
             recompensaPaso -= 50.0;
         }
 
-        // 5. GPS ANTI-DONAS / ESTANCAMIENTO
+        //GPS ANTI-DONAS / ESTANCAMIENTO
         if (this.pasosSobrevividos % 15 == 0) {
             double desplazamiento = Math.sqrt(Math.pow(vehiculo.getX() - ultimoX, 2) + Math.pow(vehiculo.getY() - ultimoY, 2));
 
             // Si el coche da vueltas cerradas sobre su propio eje, el desplazamiento será casi cero
             if (desplazamiento < 15.0) {
-                System.out.println(">>> [ALERTA] GPS: Auto estancado o dando vueltas. Abortando vida.");
+                System.out.println(">>> [ALERTA] GPS: Auto estancado o dando vueltas.");
                 return new StepReply<>(new EstadoVehiculo(normalizados), -2000.0, true, null);
             }
 
-            // Guardamos coordenadas para el siguiente control (Ya no damos bonos aquí para evitar abusos)
+            // Guardamos coordenadas para el siguiente control
             this.ultimoX = vehiculo.getX();
             this.ultimoY = vehiculo.getY();
         }
 
-        // 6. VERIFICACIÓN DE META
+        // verificar si llego a la meta
         boolean terminado = false;
         if (gestor.cruzoLaMeta(vehiculo)) {
             System.out.println(">>> [META] ¡CARRERA COMPLETADA POR LA IA!");

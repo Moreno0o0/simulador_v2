@@ -1,4 +1,4 @@
-//aqui se carga todo lo que se muestra en pantalla
+//aquí se carga todo lo que se muestra en pantalla
 package vista;
 
 import IA.Sensores;
@@ -19,7 +19,7 @@ public class VistaJuego extends StackPane implements Render {
 
     //cargar pista y carros
     private final Image pista_img = new Image("/assets/track.png");
-    //private final Image pista_img = new Image("/assets/track_B&W.png");// pista de colisicones en blanco y negro
+    //private final Image pista_img = new Image("/assets/track_B&W.png");// pista de colisicones en blanco y negro para mantenimiento de codigo
     private final Image carro_jugador_img = new Image("/assets/camaro.png");
     private final Image carro_contrincante = new Image("/assets/mustang.png");
 

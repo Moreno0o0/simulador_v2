@@ -10,27 +10,26 @@ public class MainEntrenamiento {
 
     public static void main(String[] args) {
         System.out.println("=====================================================");
-        System.out.println(" INICIANDO MODO DE ENTRENAMIENTO EXTREMO (HEADLESS)");
+        System.out.println(" INICIANDO MODO DE ENTRENAMIENTO EN CONSOLA");
         System.out.println("=====================================================");
         System.out.println(">>> Preparando el circuito sin gráficos...");
 
-        // 1. Optimizaciones de CPU para redes pequeñas
+        //Optimizaciones de CPU
         System.setProperty("org.bytedeco.javacpp.maxthreads", "24");
         System.setProperty("org.nd4j.cpu.num_threads", "24");
 
-        // 2. Instanciar exclusivamente los modelos lógicos (Cero interfaces gráficas)
+        //Instanciar exclusivamente los modelos lógicos (Cero interfaces gráficas)
         Vehiculo contrincante_IA = new Vehiculo(1000, 710, Constantes.ANCHO_CARRO, Constantes.ALTO_CARRO);
         GestorColisiones gestorFisicas = new GestorColisiones();
 
-        // 3. Crear el entorno que controla las reglas del juego
+        //Crear el entorno que controla las reglas del juego
         EntornoPista entornoVirtual = new EntornoPista(contrincante_IA, gestorFisicas);
 
         System.out.println(">>> ¡Acelerador a fondo! La IA está simulando miles de vidas en segundo plano...");
         long tiempoInicio = System.currentTimeMillis();
 
-        // 4. Lanzar el entrenamiento puro
-        // Le ponemos el sufijo "_VelocidadLuz" para que no sobreescriba tus pruebas viejas
-        EntrenadorIA.entrenar(entornoVirtual, "_VelocidadLuz_v2");
+        //Lanzar el entrenamiento
+        EntrenadorIA.entrenar(entornoVirtual, "_V1");// cambiar a mismo que el motor y main
 
         long tiempoFin = System.currentTimeMillis();
         long minutosTotales = ((tiempoFin - tiempoInicio) / 1000) / 60;
