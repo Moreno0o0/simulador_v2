@@ -17,6 +17,7 @@ public class Motor {
     private Render vista;
     private AnimationTimer cicloJuego;
     private GestorColisiones gestorFisicas;
+    private double cuentaRegresiva = 3.0;
 
     private long tiempoAnterior = 0;
     private double deltaAcumulado = 0;
@@ -59,11 +60,22 @@ public class Motor {
                     tiempoAnterior = tiempoActual;
                     return;
                 }
+                double dtSegundos = (tiempoActual - tiempoAnterior) / 1_000_000_000.0;
+
+                if (!esModoEntrenamiento && cuentaRegresiva > -1.0) {
+                    cuentaRegresiva -= dtSegundos;
+                }
 
                 // Calculamos cuántos "Ticks" (fracciones de 1/60 de segundo) han pasado
                 deltaAcumulado += (tiempoActual - tiempoAnterior) / TICK_RATE;
                 tiempoAnterior = tiempoActual;
 
+
+                if (!esModoEntrenamiento && cuentaRegresiva > 0) {
+                    deltaAcumulado = 0; // Evitamos que el juego acelere de golpe al terminar de contar
+                    vista.renderizar(vehiculoJugador, vehiculo_IA, gestorFisicas, cuentaRegresiva);
+                    return; // Abortamos el resto del ciclo para que los carros no se muevan
+                }
                 // FÍSICAS INDEPENDIENTES DE LA PANTALLA
                 // Si la pantalla de la laptop da un tirón, el while se ejecuta varias veces para "ponerse al día"
                 while (deltaAcumulado >= 1.0) {
@@ -72,7 +84,7 @@ public class Motor {
                 }
 
                 // RENDERIZADO (Se dibuja lo que sea que haya resultado de las físicas)
-                vista.renderizar(vehiculoJugador, vehiculo_IA, gestorFisicas);
+                vista.renderizar(vehiculoJugador, vehiculo_IA, gestorFisicas,cuentaRegresiva);
             }
         };
     }

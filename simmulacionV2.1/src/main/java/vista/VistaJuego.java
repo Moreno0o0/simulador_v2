@@ -11,6 +11,7 @@ import modelo.Constantes;
 import javafx.scene.layout.StackPane;
 import motor.GestorColisiones;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 
 public class VistaJuego extends StackPane implements Render {
 
@@ -46,12 +47,13 @@ public class VistaJuego extends StackPane implements Render {
     }
 
     @Override
-    public void renderizar(Vehiculo jugador, Vehiculo agenteIA, GestorColisiones gestorColisiones) {
+    public void renderizar(Vehiculo jugador, Vehiculo agenteIA, GestorColisiones gestorColisiones,double cuentaRegresiva) {
 
         GraphicsContext gc = canvasDinamico.getGraphicsContext2D();
 
         gc.clearRect(0, 0, getWidth(), getHeight()); //Limpiar la pantalla del frame anterior
 
+        gc.setTextAlign(TextAlignment.CENTER);
 
         // Obtenemos las coordenadas reales del gestor
         //double mx = gestorColisiones.getMetaX();
@@ -67,14 +69,35 @@ public class VistaJuego extends StackPane implements Render {
         //gc.strokeRect(mx, my, mw, mh);
 
         if ("Meta".equals(jugador.getEstado())) {
-            gc.setFill(Color.YELLOW);
+            gc.setFill(Color.LIME);
             gc.setFont(fuenteVictoriaTitulo);
-            gc.fillText("¡VICTORIA!", 540, 500);
+            gc.fillText("¡VICTORIA!", Constantes.ANCHO_VENTANA/ 2, 500);
 
             gc.setFill(Color.WHITE);
             gc.setFont(fuenteVictoriaSub);
-            gc.fillText("Felicidades por terminar la carrera", 510, 560);
+            gc.fillText("Felicidades por terminar la carrera", Constantes.ANCHO_VENTANA / 2, 560);
         }
+        else if ("Meta".equals(agenteIA.getEstado())) {
+            gc.setFill(Color.RED);
+            gc.setFont(fuenteVictoriaTitulo);
+            gc.fillText("¡DERROTA!", modelo.Constantes.ANCHO_VENTANA / 2.0, 500);
+
+            gc.setFill(Color.WHITE);
+            gc.setFont(fuenteVictoriaSub);
+            gc.fillText("La Inteligencia Artificial ha dominado el circuito", modelo.Constantes.ANCHO_VENTANA / 2.0, 560);
+        }
+        else if (cuentaRegresiva > 0) {
+            gc.setFill(Color.RED);
+            gc.setFont(new Font("Impact", 150));
+            // Imprime 3, 2, 1 redondeando hacia arriba
+            gc.fillText(String.valueOf((int) Math.ceil(cuentaRegresiva)), modelo.Constantes.ANCHO_VENTANA / 2.0, modelo.Constantes.ALTO_VENTANA / 2.0);
+        }
+        else if (cuentaRegresiva > -1.0) { // Se mantiene en pantalla por 1 segundo extra
+            gc.setFill(Color.LIME);
+            gc.setFont(new Font("Impact", 150));
+            gc.fillText("¡GO!", modelo.Constantes.ANCHO_VENTANA / 2.0, modelo.Constantes.ALTO_VENTANA / 2.0);
+        }
+        gc.setTextAlign(TextAlignment.LEFT);
 
         Sensores sens = agenteIA.getSensores();
 
